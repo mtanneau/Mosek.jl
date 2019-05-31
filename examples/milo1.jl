@@ -7,6 +7,7 @@
 
 
 using Mosek
+using Printf, SparseArrays
 
 # Define a stream printer to grab output from MOSEK
 printstream(msg::String) = print(msg)
@@ -63,7 +64,7 @@ maketask() do task
                    [ MSK_VAR_TYPE_INT, MSK_VAR_TYPE_INT ])
     
     # Optimize the task
-    optimize(task)
+    optimize(task,"mosek://solve.mosek.com:30080")
 
     # Print a summary containing information
     # about the solution for debugging purposes

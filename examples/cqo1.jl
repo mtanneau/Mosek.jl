@@ -6,6 +6,7 @@
 ##
 
 using Mosek
+using Printf
 
 printstream(msg::AbstractString) = print(msg)
 callback(where,dinf,iinf,liinf) = 0 
@@ -64,7 +65,7 @@ maketask() do task
     putobjsense(task,MSK_OBJECTIVE_SENSE_MINIMIZE)
     
     # Optimize the task
-    optimize(task)
+    optimize(task,"mosek://solve.mosek.com:30080")
     # Print a summary containing information
     # about the solution for debugging purposes
     solutionsummary(task,MSK_STREAM_MSG)

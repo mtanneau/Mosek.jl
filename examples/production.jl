@@ -1,4 +1,5 @@
 using Mosek
+using Printf
 
 # Demonstrates how to solve a linear optimization problem using the
 # MOSEK API and modify and re-optimize the problem.
@@ -43,7 +44,7 @@ function production(productNames     :: Vector{String},
         putobjsense(t,MSK_OBJECTIVE_SENSE_MAXIMIZE)
         putclist(t,Int32[1:n...],profit)
 
-        optimize(t)
+        r = optimize(t,"mosek://solve.mosek.com:30080")
         xx = getxx(t,MSK_SOL_BAS)
         println("Initial solution:")
         for i in 1:n
@@ -53,7 +54,7 @@ function production(productNames     :: Vector{String},
         ############### Make a change to the A matrix ###############
         putaij(t,Int32(mod_i),Int32(mod_j),mod_cof)
 
-        optimize(t)
+        optimize(t,"mosek://solve.mosek.com:30080")
         xx = getxx(t,MSK_SOL_BAS)
         println("After modified coefficient:")
         for i in 1:n
@@ -71,7 +72,7 @@ function production(productNames     :: Vector{String},
         # reoptimize using simplex
         putintparam(t,MSK_IPAR_OPTIMIZER, MSK_OPTIMIZER_FREE_SIMPLEX)
 
-        optimize(t)
+        optimize(t,"mosek://solve.mosek.com:30080")
         xx = getxx(t,MSK_SOL_BAS)
         println("After added product (column):")
         for i in 1:n
@@ -85,7 +86,7 @@ function production(productNames     :: Vector{String},
         putarow(t,Int32(m+1),Int32[1:n...],addTimeRequirements)
         putconbound(t,Int32(n+1),MSK_BK_UP,-Inf,addTimeResources)
 
-        optimize(t)
+        optimize(t,"mosek://solve.mosek.com:30080")
         xx = getxx(t,MSK_SOL_BAS)
         println("After added process (row):")
         for i in 1:n
